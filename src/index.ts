@@ -12,7 +12,7 @@ const fastify = Fastify({
 // Declare routes
 fastify.get("/health", (req, res) => {
   return "OK\n";
-})
+});
 fastify.post("/webhook/gitsync", gitsync);
 fastify.post("/webhook/renovate", renovate);
 
