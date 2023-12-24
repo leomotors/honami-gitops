@@ -9,7 +9,7 @@
     "lint": "eslint",
     "format": "eslint --fix",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "dotenv -- node dist/index.js",
     "renovate": "dotenv -- sh renovate/run.sh",
     "renovate:dev": "dotenv -- sh renovate/dev.sh"
   },
