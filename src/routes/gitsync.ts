@@ -15,9 +15,9 @@ export async function gitsync(request: FastifyRequest, reply: FastifyReply) {
     return "Unauthorized";
   }
 
-  await gitSync();
+  gitSync();
 
-  return "Success";
+  return "Task started";
 }
 
 async function gitSync() {

@@ -11,7 +11,7 @@ export async function renovate(request: FastifyRequest, reply: FastifyReply) {
     return "Unauthorized";
   }
 
-  await runRenovate();
+  runRenovate();
 
-  return "Success";
+  return "Task started";
 }
