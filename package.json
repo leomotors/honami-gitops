@@ -1,0 +1,12 @@
+{
+  "name": "honami-gitops",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "renovate": "dotenv -- sh renovate/run.sh",
+    "renovate:dev": "dotenv -- sh renovate/dev.sh"
+  },
+  "dependencies": {
+    "dotenv-cli": "7.3.0"
+  }
+}
