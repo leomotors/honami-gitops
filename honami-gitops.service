@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Environment=NODE_ENV=production
 WorkingDirectory=/home/leomotors/honami-gitops
-ExecStart=service.zsh
+ExecStart=/home/leomotors/honami-gitops/service.zsh
 Type=simple
 User=leomotors
 

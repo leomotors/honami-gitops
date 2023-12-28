@@ -5,7 +5,9 @@ import { log } from "./logger.js";
 export async function runRenovate() {
   log.info("Running Renovate...");
   try {
-    await exec("pnpm run renovate");
+    const { stderr, stdout } = await exec("pnpm run renovate");
+    console.log(stdout);
+    stderr && console.error(stderr);
   } catch (err) {
     log.error("Renovate failed!");
     log.normal(`${err}`);
