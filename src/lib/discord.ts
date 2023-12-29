@@ -9,20 +9,24 @@ const endpoint = "https://discord.com/api/v10";
 export async function sendMessage(content: string) {
   log.normal("Sending message to discord...");
 
-  const res = await fetch(
-    endpoint + Routes.channelMessages(environment.DISCORD_CHANNEL_ID),
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bot ${environment.DISCORD_TOKEN}`,
-        "Content-Type": "application/json",
+  try {
+    const res = await fetch(
+      endpoint + Routes.channelMessages(environment.DISCORD_CHANNEL_ID),
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bot ${environment.DISCORD_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content }),
       },
-      body: JSON.stringify({ content }),
-    },
-  );
+    );
 
-  if (!res.ok) {
-    log.error(`Discord API Failed ${res.status} ${res.statusText}`);
-    log.error(await res.text());
+    if (!res.ok) {
+      log.error(`Discord API Failed ${res.status} ${res.statusText}`);
+      log.error(await res.text());
+    }
+  } catch (err) {
+    log.error(`Fatal Error! Cannot send message to discord: ${err}`);
   }
 }
