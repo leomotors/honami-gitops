@@ -11,4 +11,10 @@ module.exports = {
       password: process.env.RENOVATE_TOKEN,
     },
   ],
+  packageRules: [
+    {
+      packagePatterns: ["local/*"],
+      enabled: false,
+    },
+  ],
 };
