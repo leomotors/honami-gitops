@@ -10,7 +10,7 @@ const fastify = Fastify({
 });
 
 // Declare routes
-fastify.get("/health", (req, res) => {
+fastify.get("/health", (_, __) => {
   return "OK\n";
 });
 fastify.post("/webhook/gitsync", gitsync);
@@ -31,9 +31,14 @@ process.on("SIGINT", async () => {
 
 runRenovate();
 
-setInterval(
-  () => {
-    runRenovate();
-  },
-  1000 * 60 * 60,
+setTimeout(
+  () =>
+    setInterval(
+      () => {
+        runRenovate();
+      },
+      1000 * 60 * 60,
+    ),
+  // Delay the first run by 3 minutes to not consume too much resources
+  1000 * 60 * 3,
 );
