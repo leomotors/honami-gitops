@@ -7,12 +7,14 @@ export async function restart(path: string, files: string[]) {
 
     const targetPath = path + "/" + file.replace("/docker-compose.yml", "");
 
-    await exec(
-      `cd ${targetPath} && sudo docker compose pull && sudo docker compose down && sudo docker compose up -d`,
-    );
+    await exec(`cd ${targetPath} && sudo docker compose pull`);
+    const download = performance.now();
+
+    await exec("sudo docker compose down && sudo docker compose up -d");
+    const restarted = performance.now();
 
     await sendMessage(
-      `:white_check_mark: Restarted ${file} in ${performance.now() - start}ms`,
+      `:white_check_mark: Restarted ${file}, Download: ${download - start}ms, Restart: ${performance.now() - restarted}ms`,
     );
   }
 }
