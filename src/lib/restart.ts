@@ -10,7 +10,7 @@ export async function restart(path: string, files: string[]) {
     await exec(`cd ${targetPath} && sudo docker compose pull`);
     const download = performance.now();
 
-    await exec("sudo docker compose down && sudo docker compose up -d");
+    await exec("cd ${targetPath} && sudo docker compose down && sudo docker compose up -d");
     const restarted = performance.now();
 
     await sendMessage(
