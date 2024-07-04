@@ -42,7 +42,7 @@ export async function restart(path: string, files: string[]) {
     });
   }
 
-  sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
+  await sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
 
   await sql.end();
 }

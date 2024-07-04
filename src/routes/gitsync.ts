@@ -55,7 +55,7 @@ async function gitSync() {
     await restart(environment.REPO_PATH, composeFiles);
   } catch (err) {
     log.error("GIT SYNC: Restart failed!");
-    log.normal(`${err}`);
+    log.normal(`${err} ${(err as Error).stack}`);
     await sendMessage("# GIT SYNC: Restart failed");
   }
 }
