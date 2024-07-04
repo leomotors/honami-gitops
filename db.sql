@@ -1,0 +1,7 @@
+CREATE TABLE gitops (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    file_path TEXT NOT NULL,
+    time_pull DOUBLE PRECISION NOT NULL,
+    time_restart DOUBLE PRECISION NOT NULL
+);

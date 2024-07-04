@@ -1,4 +1,5 @@
 import { exec } from "./exec.js";
+import { log } from "./logger.js";
 
 export async function getChangedFiles(
   path: string,
@@ -7,6 +8,7 @@ export async function getChangedFiles(
 ) {
   const cmd = `cd ${path} && git diff --name-only ${before} ${after}`;
   const { stdout: result } = await exec(cmd);
+  log.normal(`Git Diff: ${result}`);
   return result.split("\n").filter((item) => item);
 }
 

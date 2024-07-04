@@ -6,6 +6,8 @@ const environmentSchema = z.object({
 
   DISCORD_TOKEN: z.string(),
   DISCORD_CHANNEL_ID: z.string(),
+
+  DATABASE_URL: z.string(),
 });
 
 export const environment = environmentSchema.parse(process.env);
