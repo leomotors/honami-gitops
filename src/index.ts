@@ -10,7 +10,7 @@ const fastify = Fastify({
 });
 
 // Declare routes
-fastify.get("/health", (_, __) => {
+fastify.get("/health", { logLevel: "warn" }, (_, __) => {
   return "OK\n";
 });
 fastify.post("/webhook/gitsync", gitsync);
@@ -29,16 +29,19 @@ process.on("SIGINT", async () => {
   await fastify.close();
 });
 
-runRenovate();
-
 setTimeout(
-  () =>
+  () => {
+    // After 3 Minutes
+    runRenovate();
+
+    // Then, run every hour
     setInterval(
       () => {
         runRenovate();
       },
       1000 * 60 * 60,
-    ),
+    );
+  },
   // Delay the first run by 3 minutes to not consume too much resources
   1000 * 60 * 3,
 );
