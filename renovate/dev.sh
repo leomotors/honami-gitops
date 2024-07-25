@@ -1,4 +1,5 @@
 docker run \
+    --name renovate-dev \
     --rm \
     -e LOG_LEVEL="debug" \
     -e RENOVATE_REPOSITORIES="$RENOVATE_REPOSITORIES" \
