@@ -1,12 +1,26 @@
 import chalk from "chalk";
-import Fastify from "fastify";
+import Fastify, { FastifyRequest } from "fastify";
 
 import { runRenovate } from "./lib/runRenovate.js";
 import { gitsync } from "./routes/gitsync.js";
 import { renovate } from "./routes/renovate.js";
 
+function getIP(req: FastifyRequest) {
+  return req.headers["cf-connecting-ip"] || req.headers["x-real-ip"] || req.ip;
+}
+
 const fastify = Fastify({
-  logger: true,
+  logger: {
+    serializers: {
+      req(req) {
+        return {
+          method: req.method,
+          url: req.url,
+          ip: getIP(req),
+        };
+      },
+    },
+  },
 });
 
 // Declare routes
