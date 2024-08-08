@@ -35,8 +35,10 @@ async function gitSync() {
     before,
     after,
   );
-  const composeFiles = changedFiles.filter((file) =>
-    file.endsWith("docker-compose.yml"),
+  const composeFiles = changedFiles.filter(
+    (file) =>
+      file.endsWith("docker-compose.yml") ||
+      file.endsWith("docker-compose.yaml"),
   );
 
   if (composeFiles.length === 0) {

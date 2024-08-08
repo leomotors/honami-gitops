@@ -16,7 +16,7 @@ export async function restart(path: string, files: string[]) {
   const sqlPayload: SqlPayload[] = [];
 
   for (const file of files) {
-    const targetPath = path + "/" + file.replace("/docker-compose.yml", "");
+    const targetPath = path + "/" + file.replace(/\/docker-compose.ya?ml$/, "");
 
     const start = performance.now();
 
