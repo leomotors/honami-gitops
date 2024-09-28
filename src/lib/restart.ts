@@ -1,9 +1,41 @@
+import fs from "node:fs/promises";
 import postgres from "postgres";
 
 import { environment } from "../environment.js";
 
 import { sendMessage } from "./discord.js";
 import { exec } from "./exec.js";
+
+/**
+ * Returns true if proceed with restart
+ */
+async function checkRestart(file: string, path: string) {
+  const content = await fs.readFile(file, { encoding: "utf-8" });
+
+  const firstLine = content.split("\n")[0];
+
+  if (!firstLine?.includes("runs-on:")) {
+    await sendMessage(`:warning: File ${file} does not have runs-on tag`);
+    return false;
+  }
+
+  const listStr = firstLine.split(":")[1]?.trim();
+  const list = listStr?.split(",").map((item) => item.trim());
+
+  if (!list || list.length < 1) {
+    await sendMessage(`:warning: Fail to parse runs-on tag in ${file}`);
+    return false;
+  }
+
+  if (!list.includes(environment.DEVICE_NAME)) {
+    await sendMessage(`:fast_forward: Skip ${file}`);
+    await exec(`cd ${path} && sudo docker compose down`);
+
+    return false;
+  }
+
+  return true;
+}
 
 export async function restart(path: string, files: string[]) {
   const sql = postgres(environment.DATABASE_URL);
@@ -17,6 +49,10 @@ export async function restart(path: string, files: string[]) {
 
   for (const file of files) {
     const targetPath = path + "/" + file.replace(/\/docker-compose.ya?ml$/, "");
+
+    if (!(await checkRestart(file, targetPath))) {
+      continue;
+    }
 
     const start = performance.now();
 

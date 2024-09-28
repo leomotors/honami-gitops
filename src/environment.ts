@@ -8,6 +8,8 @@ const environmentSchema = z.object({
   DISCORD_CHANNEL_ID: z.string(),
 
   DATABASE_URL: z.string(),
+
+  DEVICE_NAME: z.string(),
 });
 
 export const environment = environmentSchema.parse(process.env);
