@@ -86,7 +86,13 @@ export async function restart(path: string, files: string[]) {
     });
   }
 
-  await sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
-
-  await sql.end();
+  try {
+    await sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
+  } catch (err) {
+    await sendMessage(
+      `:warning: (${environment.DEVICE_NAME}) Failed to insert to database`,
+    );
+  } finally {
+    await sql.end();
+  }
 }
