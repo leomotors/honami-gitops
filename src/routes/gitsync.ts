@@ -59,7 +59,7 @@ async function gitSync() {
     log.error("GIT SYNC : Restart failed!");
     log.normal(`${err} ${(err as Error).stack}`);
     await sendMessage(
-      "# GIT SYNC (${environment.DEVICE_NAME}): Restart failed",
+      `# GIT SYNC (${environment.DEVICE_NAME}): Restart failed`,
     );
   }
 }
