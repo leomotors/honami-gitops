@@ -15,7 +15,9 @@ async function checkRestart(file: string, path: string) {
   const firstLine = content.split("\n")[0];
 
   if (!firstLine?.includes("runs-on:")) {
-    await sendMessage(`:warning: File ${file} does not have runs-on tag`);
+    await sendMessage(
+      `:warning: (${environment.DEVICE_NAME}) File ${file} does not have runs-on tag`,
+    );
     return false;
   }
 
@@ -28,7 +30,9 @@ async function checkRestart(file: string, path: string) {
   }
 
   if (!list.includes(environment.DEVICE_NAME)) {
-    await sendMessage(`:fast_forward: Skip ${file}`);
+    await sendMessage(
+      `:fast_forward: (${environment.DEVICE_NAME}) Skip ${file}`,
+    );
     await exec(`cd ${path} && sudo docker compose down`);
 
     return false;
@@ -68,7 +72,7 @@ export async function restart(path: string, files: string[]) {
     const restartTime = restarted - download;
 
     await sendMessage(
-      `:white_check_mark: Restarted ${file}, Download: ${downloadTime}ms, Restart: ${restartTime}ms`,
+      `:white_check_mark: (${environment.DEVICE_NAME}) Restarted ${file}, Download: ${downloadTime}ms, Restart: ${restartTime}ms`,
     );
 
     sqlPayload.push({

@@ -48,7 +48,7 @@ async function gitSync() {
 
   log.normal(`GIT SYNC: ${composeFiles}`);
   await sendMessage(
-    `# GIT SYNC: ${composeFiles.length} compose files changed\n${composeFiles
+    `# GIT SYNC (${environment.DEVICE_NAME}): ${composeFiles.length} compose files changed\n${composeFiles
       .map((f) => `- ${f}`)
       .join("\n")}`,
   );
@@ -56,8 +56,10 @@ async function gitSync() {
   try {
     await restart(environment.REPO_PATH, composeFiles);
   } catch (err) {
-    log.error("GIT SYNC: Restart failed!");
+    log.error("GIT SYNC : Restart failed!");
     log.normal(`${err} ${(err as Error).stack}`);
-    await sendMessage("# GIT SYNC: Restart failed");
+    await sendMessage(
+      "# GIT SYNC (${environment.DEVICE_NAME}): Restart failed",
+    );
   }
 }
