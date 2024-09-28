@@ -43,19 +43,24 @@ process.on("SIGINT", async () => {
   await fastify.close();
 });
 
-setTimeout(
-  () => {
-    // After 3 Minutes
-    runRenovate();
+if (process.env.RUNS_RENOVATE === "true") {
+  console.log(chalk.green("Renovate is enabled"));
+  setTimeout(
+    () => {
+      // After 3 Minutes
+      runRenovate();
 
-    // Then, run every hour
-    setInterval(
-      () => {
-        runRenovate();
-      },
-      1000 * 60 * 60,
-    );
-  },
-  // Delay the first run by 3 minutes to not consume too much resources
-  1000 * 60 * 3,
-);
+      // Then, run every hour
+      setInterval(
+        () => {
+          runRenovate();
+        },
+        1000 * 60 * 60,
+      );
+    },
+    // Delay the first run by 3 minutes to not consume too much resources
+    1000 * 60 * 3,
+  );
+} else {
+  console.log(chalk.yellow("Renovate is disabled"));
+}
