@@ -32,7 +32,7 @@ fastify.post("/webhook/renovate", renovate);
 
 // Run the server!
 try {
-  await fastify.listen({ port: 8940 });
+  await fastify.listen({ port: 8940, host: "0.0.0.0" });
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);
