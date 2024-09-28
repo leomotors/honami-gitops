@@ -9,14 +9,18 @@ import { exec } from "./exec.js";
 /**
  * Returns true if proceed with restart
  */
-async function checkRestart(file: string, path: string) {
-  const content = await fs.readFile(file, { encoding: "utf-8" });
+async function checkRestart(
+  fileName: string,
+  filePath: string,
+  folderPath: string,
+) {
+  const content = await fs.readFile(filePath, { encoding: "utf-8" });
 
   const firstLine = content.split("\n")[0];
 
   if (!firstLine?.includes("runs-on:")) {
     await sendMessage(
-      `:warning: (${environment.DEVICE_NAME}) File ${file} does not have runs-on tag`,
+      `:warning: (${environment.DEVICE_NAME}) File ${fileName} does not have runs-on tag`,
     );
     return false;
   }
@@ -25,15 +29,15 @@ async function checkRestart(file: string, path: string) {
   const list = listStr?.split(",").map((item) => item.trim());
 
   if (!list || list.length < 1) {
-    await sendMessage(`:warning: Fail to parse runs-on tag in ${file}`);
+    await sendMessage(`:warning: Fail to parse runs-on tag in ${fileName}`);
     return false;
   }
 
   if (!list.includes(environment.DEVICE_NAME)) {
     await sendMessage(
-      `:fast_forward: (${environment.DEVICE_NAME}) Skip ${file}`,
+      `:fast_forward: (${environment.DEVICE_NAME}) Skip ${fileName}`,
     );
-    await exec(`cd ${path} && sudo docker compose down`);
+    await exec(`cd ${folderPath} && sudo docker compose down`);
 
     return false;
   }
@@ -54,7 +58,7 @@ export async function restart(path: string, files: string[]) {
   for (const file of files) {
     const targetPath = path + "/" + file.replace(/\/docker-compose.ya?ml$/, "");
 
-    if (!(await checkRestart(file, targetPath))) {
+    if (!(await checkRestart(file, path + "/" + file, targetPath))) {
       continue;
     }
 
