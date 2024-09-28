@@ -2,7 +2,7 @@
   "name": "honami-gitops",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@9.11.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -14,18 +14,18 @@
     "renovate:dev": "dotenv -- sh renovate/dev.sh"
   },
   "dependencies": {
-    "chalk": "5.3.0",
-    "discord-api-types": "0.37.93",
-    "dotenv-cli": "7.4.2",
-    "fastify": "4.28.1",
-    "postgres": "3.4.4",
-    "zod": "3.23.8"
+    "chalk": "^5.3.0",
+    "discord-api-types": "^0.37.101",
+    "dotenv-cli": "^7.4.2",
+    "fastify": "^5.0.0",
+    "postgres": "^3.4.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@leomotors/config": "0.11.0",
-    "@trivago/prettier-plugin-sort-imports": "4.3.0",
-    "@types/node": "20.14.12",
-    "eslint": "8.57.0",
-    "typescript": "5.5.4"
+    "@leomotors/config": "^0.11.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "^20.16.10",
+    "eslint": "^8.57.1",
+    "typescript": "^5.6.2"
   }
 }
