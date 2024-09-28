@@ -5,6 +5,11 @@ import { log } from "./logger.js";
 let renovateRunning = false;
 
 export async function runRenovate() {
+  if (process.env.RUNS_RENOVATE !== "true") {
+    log.error("Renovate is disabled but requested to run!");
+    return;
+  }
+
   if (renovateRunning) {
     log.info("Renovate already running, skipping...");
     return;

@@ -10,6 +10,7 @@ const environmentSchema = z.object({
   DATABASE_URL: z.string(),
 
   DEVICE_NAME: z.string(),
+  RUNS_RENOVATE: z.string(),
 });
 
 export const environment = environmentSchema.parse(process.env);

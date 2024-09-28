@@ -11,6 +11,11 @@ export async function renovate(request: FastifyRequest, reply: FastifyReply) {
     return "Unauthorized";
   }
 
+  if (environment.RUNS_RENOVATE !== "true") {
+    reply.status(418);
+    return "Renovate is disabled";
+  }
+
   runRenovate();
 
   return "Task started";
