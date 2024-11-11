@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { environment } from "../environment.js";
-import { sendMessage } from "../lib/discord.js";
+import { addMessage, sendMessage } from "../lib/discord.js";
 import { exec } from "../lib/exec.js";
 import { getChangedFiles, getCurrentHash } from "../lib/git.js";
 import { log } from "../lib/logger.js";
@@ -47,7 +47,7 @@ async function gitSync() {
   }
 
   log.normal(`GIT SYNC: ${composeFiles}`);
-  await sendMessage(
+  addMessage(
     `# GIT SYNC (${environment.DEVICE_NAME}): ${composeFiles.length} compose files changed\n${composeFiles
       .map((f) => `- ${f}`)
       .join("\n")}`,
@@ -58,8 +58,8 @@ async function gitSync() {
   } catch (err) {
     log.error("GIT SYNC : Restart failed!");
     log.normal(`${err} ${(err as Error).stack}`);
-    await sendMessage(
-      `# GIT SYNC (${environment.DEVICE_NAME}): Restart failed`,
-    );
+    addMessage(`# GIT SYNC (${environment.DEVICE_NAME}): Restart failed`);
+  } finally {
+    await sendMessage();
   }
 }

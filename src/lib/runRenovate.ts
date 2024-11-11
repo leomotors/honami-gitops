@@ -1,4 +1,4 @@
-import { sendMessage } from "./discord.js";
+import { addMessage, sendMessage } from "./discord.js";
 import { exec } from "./exec.js";
 import { log } from "./logger.js";
 
@@ -25,7 +25,8 @@ export async function runRenovate() {
   } catch (err) {
     log.error("Renovate failed!");
     log.normal(`${err}`);
-    await sendMessage(`# RENOVATE: Run failed\n${err}`.slice(0, 2000));
+    addMessage(`# RENOVATE: Run failed\n${err}`.slice(0, 2000));
+    await sendMessage();
   } finally {
     renovateRunning = false;
   }

@@ -6,8 +6,17 @@ import { log } from "./logger.js";
 
 const endpoint = "https://discord.com/api/v10";
 
-export async function sendMessage(content: string) {
-  log.normal("Sending message to discord...");
+const messages: string[] = [];
+
+export function addMessage(content: string) {
+  log.normal(`[Discord] Added: ${content}`);
+  messages.push(content);
+}
+
+export async function sendMessage() {
+  const content = messages.join("\n");
+
+  log.normal("[Discord] Sending message...");
 
   try {
     const res = await fetch(
@@ -28,5 +37,7 @@ export async function sendMessage(content: string) {
     }
   } catch (err) {
     log.error(`Fatal Error! Cannot send message to discord: ${err}`);
+  } finally {
+    messages.length = 0;
   }
 }

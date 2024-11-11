@@ -3,7 +3,7 @@ import postgres from "postgres";
 
 import { environment } from "../environment.js";
 
-import { sendMessage } from "./discord.js";
+import { addMessage } from "./discord.js";
 import { exec } from "./exec.js";
 
 /**
@@ -19,7 +19,7 @@ async function checkRestart(
   const firstLine = content.split("\n")[0];
 
   if (!firstLine?.includes("runs-on:")) {
-    await sendMessage(
+    addMessage(
       `:warning: (${environment.DEVICE_NAME}) File ${fileName} does not have runs-on tag`,
     );
     return false;
@@ -29,14 +29,12 @@ async function checkRestart(
   const list = listStr?.split(",").map((item) => item.trim());
 
   if (!list || list.length < 1) {
-    await sendMessage(`:warning: Fail to parse runs-on tag in ${fileName}`);
+    addMessage(`:warning: Fail to parse runs-on tag in ${fileName}`);
     return false;
   }
 
   if (!list.includes(environment.DEVICE_NAME)) {
-    await sendMessage(
-      `:fast_forward: (${environment.DEVICE_NAME}) Skip ${fileName}`,
-    );
+    addMessage(`:fast_forward: (${environment.DEVICE_NAME}) Skip ${fileName}`);
     await exec(`cd ${folderPath} && sudo docker compose down`);
 
     return false;
@@ -75,7 +73,7 @@ export async function restart(path: string, files: string[]) {
     const downloadTime = download - start;
     const restartTime = restarted - download;
 
-    await sendMessage(
+    addMessage(
       `:white_check_mark: (${environment.DEVICE_NAME}) Restarted ${file}, Download: ${downloadTime}ms, Restart: ${restartTime}ms`,
     );
 
@@ -89,7 +87,7 @@ export async function restart(path: string, files: string[]) {
   try {
     await sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
   } catch (err) {
-    await sendMessage(
+    addMessage(
       `:warning: (${environment.DEVICE_NAME}) Failed to insert to database`,
     );
   } finally {
