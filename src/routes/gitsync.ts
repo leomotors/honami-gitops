@@ -22,7 +22,17 @@ export async function gitsync(request: FastifyRequest, reply: FastifyReply) {
 
 async function gitSync() {
   const before = await getCurrentHash(environment.REPO_PATH);
-  await exec(`cd ${environment.REPO_PATH} && git pull`);
+
+  try {
+    await exec(`cd ${environment.REPO_PATH} && git pull`);
+  } catch (err) {
+    log.error("GIT SYNC: Pull failed!");
+    log.normal(`${err} ${(err as Error)?.stack}`);
+    addMessage(`# GIT SYNC (${environment.DEVICE_NAME}): Pull failed`);
+    await sendMessage();
+    return;
+  }
+
   const after = await getCurrentHash(environment.REPO_PATH);
 
   if (before === after) {
