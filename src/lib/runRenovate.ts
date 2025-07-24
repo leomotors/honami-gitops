@@ -21,7 +21,9 @@ export async function runRenovate() {
   try {
     const { stderr, stdout } = await exec("pnpm run renovate");
     log.normal(stdout);
-    stderr && log.error(stderr);
+    if (stderr) {
+      log.error(stderr);
+    }
   } catch (err) {
     log.error("Renovate failed!");
     log.normal(`${err}`);

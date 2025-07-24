@@ -1,31 +1,30 @@
 {
   "name": "honami-gitops",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@10.13.1",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src",
     "format": "eslint src --fix",
-    "build": "tsc",
+    "build": "tsup",
+    "check": "tsc",
     "start": "dotenv -- node dist/index.js",
     "renovate": "dotenv -- sh renovate/run.sh",
     "renovate:dev": "dotenv -- sh renovate/dev.sh"
   },
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "discord-api-types": "^0.37.105",
-    "dotenv-cli": "^7.4.3",
-    "fastify": "^5.1.0",
-    "postgres": "^3.4.5",
-    "zod": "^3.23.8"
-  },
   "devDependencies": {
-    "@leomotors/config": "^0.11.0",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/node": "^22.9.0",
-    "eslint": "^8.57.1",
-    "typescript": "^5.6.3"
+    "@leomotors/config": "^1.0.1",
+    "@types/node": "^22.16.5",
+    "chalk": "^5.4.1",
+    "dotenv-cli": "^9.0.0",
+    "eslint": "^9.31.0",
+    "fastify": "^5.4.0",
+    "postgres": "^3.4.7",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "zod": "^4.0.8"
   }
 }

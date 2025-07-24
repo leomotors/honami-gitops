@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
+
 import postgres from "postgres";
 
 import { environment } from "../environment.js";
-
 import { addMessage } from "./discord.js";
 import { exec } from "./exec.js";
 
@@ -85,8 +85,13 @@ export async function restart(path: string, files: string[]) {
   }
 
   try {
-    await sql`INSERT INTO gitops ${sql(sqlPayload, "file_path", "time_pull", "time_restart")}`;
-  } catch (err) {
+    await sql`INSERT INTO gitops ${sql(
+      sqlPayload,
+      "file_path",
+      "time_pull",
+      "time_restart",
+    )}`;
+  } catch (_) {
     addMessage(
       `:warning: (${environment.DEVICE_NAME}) Failed to insert to database`,
     );

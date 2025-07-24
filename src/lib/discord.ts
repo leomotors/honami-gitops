@@ -1,7 +1,4 @@
-import { Routes } from "discord-api-types/v10";
-
 import { environment } from "../environment.js";
-
 import { log } from "./logger.js";
 
 const endpoint = "https://discord.com/api/v10";
@@ -20,7 +17,7 @@ export async function sendMessage() {
 
   try {
     const res = await fetch(
-      endpoint + Routes.channelMessages(environment.DISCORD_CHANNEL_ID),
+      `${endpoint}/channels/${environment.DISCORD_CHANNEL_ID}/messages`,
       {
         method: "POST",
         headers: {

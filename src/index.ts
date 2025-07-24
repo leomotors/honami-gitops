@@ -31,12 +31,10 @@ fastify.post("/webhook/gitsync", gitsync);
 fastify.post("/webhook/renovate", renovate);
 
 // Run the server!
-try {
-  await fastify.listen({ port: 8940, host: "0.0.0.0" });
-} catch (err) {
+fastify.listen({ port: 8940, host: "0.0.0.0" }).catch((err) => {
   fastify.log.error(err);
   process.exit(1);
-}
+});
 
 process.on("SIGINT", async () => {
   console.log(chalk.yellow("Recieved shutdown signal, closing..."));
