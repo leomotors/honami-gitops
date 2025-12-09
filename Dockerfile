@@ -10,8 +10,8 @@ COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 # Copy source code
+COPY tsconfig.json build.ts ./
 COPY src ./src
-COPY tsconfig.json ./
 
 # Build the binary
 RUN bun run build
@@ -24,7 +24,7 @@ RUN apk add --no-cache libstdc++ libgcc docker git openssh
 WORKDIR /app
 
 # Copy the compiled binary from builder
-COPY --from=builder --chown=appuser:appuser /app/out/server /app/server
+COPY --from=builder --chown=appuser:appuser /app/out/src /app/server
 
 # Expose port
 EXPOSE 8940
