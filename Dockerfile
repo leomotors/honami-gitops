@@ -1,38 +1,40 @@
-# ? -------------------------
-# ? Builder: Complile TypeScript to JS
-# ? -------------------------
-
-FROM node:22-alpine AS builder
+# Build stage
+FROM oven/bun:1-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml* ./
-RUN corepack enable
-RUN pnpm i --frozen-lockfile
+# Copy package files
+COPY package.json bun.lock ./
 
-# copy sources
+# Install dependencies
+RUN bun install --frozen-lockfile
+
+# Copy source code
 COPY src ./src
 COPY tsconfig.json ./
-COPY tsup.config.ts ./
 
-# compile
-RUN pnpm build
+# Build the binary
+RUN bun run build
 
-# ? -------------------------
-# ? Runner: Production to run
-# ? -------------------------
+# Runtime stage
+FROM alpine:3.23 AS runner
 
-FROM node:22-alpine AS runner
+RUN apk add --no-cache libstdc++ libgcc
 
-RUN apk add --no-cache docker git
+# Create non-root user
+RUN addgroup -g 1001 -S appuser && \
+  adduser -u 1001 -S appuser -G appuser
 
 WORKDIR /app
 
-LABEL name="honami-gitops"
+# Copy the compiled binary from builder
+COPY --from=builder --chown=appuser:appuser /app/out/server /app/server
 
-ENV NODE_ENV=production
+# Switch to non-root user
+USER appuser
 
-# copy all files from layers above
-COPY --from=builder /app/dist ./dist
+# Expose port
+EXPOSE 8940
 
-CMD ["node", "dist/index.cjs"]
+# Run the binary
+CMD ["/app/server"]

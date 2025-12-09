@@ -21,7 +21,6 @@
     "eslint": "^9.39.1",
     "postgres": "^3.4.7",
     "prettier": "^3.7.4",
-    "tsdown": "^0.17.2",
     "typescript": "^5.9.3",
     "zod": "^4.1.13"
   }
