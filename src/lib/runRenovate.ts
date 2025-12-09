@@ -21,7 +21,7 @@ export async function runRenovate() {
   log.info("Running Renovate...");
   try {
     const { stderr, stdout } = await exec(
-      `docker run -a ${environment.RENOVATE_CONTAINER_NAME}`,
+      `docker start -a ${environment.RENOVATE_CONTAINER_NAME}`,
     );
     log.normal(stdout);
 

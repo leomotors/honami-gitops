@@ -19,7 +19,7 @@ RUN bun run build
 # Runtime stage
 FROM alpine:3.23 AS runner
 
-RUN apk add --no-cache libstdc++ libgcc docker git
+RUN apk add --no-cache libstdc++ libgcc docker git openssh
 
 WORKDIR /app
 

@@ -36,7 +36,9 @@ const app = new Elysia()
   .listen(8940);
 
 console.log(
-  chalk.green(`Server running at http://localhost:${app.server?.port}`),
+  chalk.green(
+    `Starting Honami GitOps v${APP_VERSION} at PORT ${app.server?.port}`,
+  ),
 );
 
 process.on("SIGINT", async () => {
