@@ -4,6 +4,10 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [2.0.4] - 2025-12-09
+
+- again
+
 ## [2.0.3] - 2025-12-09
 
 - again
