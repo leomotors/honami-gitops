@@ -1,8 +1,8 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: ["src/index.ts"],
-  format: "cjs", // Output CJS
+  format: "esm", // Output ESM
   minify: false, // No minification needed for CLI
   sourcemap: true,
   clean: true, // Clean output folder before build
