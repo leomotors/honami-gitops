@@ -6,12 +6,12 @@ import { log } from "./logger.js";
 const _exec = promisify(execCallback);
 
 export async function exec(command: string) {
-  log.normal(`[EXEC]: ${command}`);
+  log.normal(`▶️ ${command}`);
   const { stderr, stdout } = await _exec(command);
 
-  log.normal(`[EXEC RESULT]: ${stdout}`);
+  log.normal(`✅ ${stdout}`);
   if (stderr) {
-    log.error(`[EXEC ERROR]: ${stderr}`);
+    log.error(`🚨 ${stderr}`);
   }
 
   return { stdout, stderr };

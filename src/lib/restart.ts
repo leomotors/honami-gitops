@@ -20,7 +20,7 @@ async function checkRestart(
 
   if (!firstLine?.includes("runs-on:")) {
     addMessage(
-      `:warning: (${environment.DEVICE_NAME}) File ${fileName} does not have runs-on tag`,
+      `⚠️ (${environment.DEVICE_NAME}) File ${fileName} does not have runs-on tag`,
     );
     return false;
   }
@@ -29,12 +29,12 @@ async function checkRestart(
   const list = listStr?.split(",").map((item) => item.trim());
 
   if (!list || list.length < 1) {
-    addMessage(`:warning: Fail to parse runs-on tag in ${fileName}`);
+    addMessage(`⚠️ Fail to parse runs-on tag in ${fileName}`);
     return false;
   }
 
   if (!list.includes(environment.DEVICE_NAME)) {
-    addMessage(`:fast_forward: (${environment.DEVICE_NAME}) Skip ${fileName}`);
+    addMessage(`⏩ (${environment.DEVICE_NAME}) Skip ${fileName}`);
     await exec(`cd ${folderPath} && sudo docker compose down`);
 
     return false;
@@ -92,9 +92,7 @@ export async function restart(path: string, files: string[]) {
       "time_restart",
     )}`;
   } catch (_) {
-    addMessage(
-      `:warning: (${environment.DEVICE_NAME}) Failed to insert to database`,
-    );
+    addMessage(`⚠️ (${environment.DEVICE_NAME}) Failed to insert to database`);
   } finally {
     await sql.end();
   }

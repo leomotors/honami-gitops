@@ -1,44 +1,48 @@
+import { openapi } from "@elysiajs/openapi";
 import chalk from "chalk";
-import Fastify, { FastifyRequest } from "fastify";
+import { Elysia } from "elysia";
 
+import { log } from "./lib/logger.js";
 import { runRenovate } from "./lib/runRenovate.js";
 import { gitsync } from "./routes/gitsync.js";
 import { renovate } from "./routes/renovate.js";
+import { getIP, isLocalIP } from "./utils.js";
 
-function getIP(req: FastifyRequest) {
-  return req.headers["cf-connecting-ip"] || req.headers["x-real-ip"] || req.ip;
-}
+type RequestState = {
+  ip?: string;
+};
 
-const fastify = Fastify({
-  logger: {
-    serializers: {
-      req(req) {
-        return {
-          method: req.method,
-          url: req.url,
-          ip: getIP(req),
-        };
-      },
-    },
-  },
-});
+const app = new Elysia()
+  .use(openapi())
+  .decorate("requestState", {} as RequestState)
+  .onRequest(({ request, requestState, server }) => {
+    const ip = getIP(request, server);
 
-// Declare routes
-fastify.get("/health", { logLevel: "warn" }, (_, __) => {
-  return "OK\n";
-});
-fastify.post("/webhook/gitsync", gitsync);
-fastify.post("/webhook/renovate", renovate);
+    requestState.ip = ip;
+  })
+  .onAfterResponse(({ set, request, path, requestState }) => {
+    const ip = requestState.ip ?? "Undefined Shit";
 
-// Run the server!
-fastify.listen({ port: 8940, host: "0.0.0.0" }).catch((err) => {
-  fastify.log.error(err);
-  process.exit(1);
-});
+    // Skip logging for health check from local IP
+    if (path === "/health" && isLocalIP(ip)) {
+      return;
+    }
+
+    log.normal(`🌐 ${request.method} ${path} ${set.status} - ${ip}`);
+  })
+  .get("/health", () => "OK\n")
+  .post("/webhook/gitsync", gitsync)
+  .post("/webhook/renovate", renovate)
+  .listen(8940);
+
+console.log(
+  chalk.green(`Server running at http://localhost:${app.server?.port}`),
+);
 
 process.on("SIGINT", async () => {
   console.log(chalk.yellow("Recieved shutdown signal, closing..."));
-  await fastify.close();
+  app.stop();
+  process.exit(0);
 });
 
 if (process.env.RUNS_RENOVATE === "true") {

@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { Context } from "elysia";
 
 import { environment } from "../environment.js";
 import { addMessage, sendMessage } from "../lib/discord.js";
@@ -7,11 +7,11 @@ import { getChangedFiles, getCurrentHash } from "../lib/git.js";
 import { log } from "../lib/logger.js";
 import { restart } from "../lib/restart.js";
 
-export async function gitsync(request: FastifyRequest, reply: FastifyReply) {
-  const authorization = request.headers.authorization;
+export async function gitsync({ request, set }: Context) {
+  const authorization = request.headers.get("authorization");
 
   if (authorization !== environment.WEBHOOK_PASSWORD) {
-    reply.status(401);
+    set.status = 401;
     return "Unauthorized";
   }
 
