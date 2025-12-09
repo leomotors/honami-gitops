@@ -35,7 +35,7 @@ async function checkRestart(
 
   if (!list.includes(environment.DEVICE_NAME)) {
     addMessage(`⏩ (${environment.DEVICE_NAME}) Skip ${fileName}`);
-    await exec(`cd ${folderPath} && sudo docker compose down`);
+    await exec(`cd ${folderPath} && docker compose down`);
 
     return false;
   }
@@ -62,19 +62,17 @@ export async function restart(path: string, files: string[]) {
 
     const start = performance.now();
 
-    await exec(`cd ${targetPath} && sudo docker compose pull`);
+    await exec(`cd ${targetPath} && docker compose pull`);
     const download = performance.now();
 
-    await exec(
-      `cd ${targetPath} && sudo docker compose up -d --force-recreate`,
-    );
+    await exec(`cd ${targetPath} && docker compose up -d --force-recreate`);
     const restarted = performance.now();
 
     const downloadTime = download - start;
     const restartTime = restarted - download;
 
     addMessage(
-      `:white_check_mark: (${environment.DEVICE_NAME}) Restarted ${file}, Download: ${downloadTime}ms, Restart: ${restartTime}ms`,
+      `✅ (${environment.DEVICE_NAME}) Restarted ${file}, Download: ${downloadTime}ms, Restart: ${restartTime}ms`,
     );
 
     sqlPayload.push({

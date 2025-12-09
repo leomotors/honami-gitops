@@ -19,19 +19,12 @@ RUN bun run build
 # Runtime stage
 FROM alpine:3.23 AS runner
 
-RUN apk add --no-cache libstdc++ libgcc
-
-# Create non-root user
-RUN addgroup -g 1001 -S appuser && \
-  adduser -u 1001 -S appuser -G appuser
+RUN apk add --no-cache libstdc++ libgcc docker
 
 WORKDIR /app
 
 # Copy the compiled binary from builder
 COPY --from=builder --chown=appuser:appuser /app/out/server /app/server
-
-# Switch to non-root user
-USER appuser
 
 # Expose port
 EXPOSE 8940
