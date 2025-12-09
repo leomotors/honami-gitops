@@ -1,0 +1,21 @@
+services:
+  renovate:
+    container_name: renovate
+    image: renovate/renovate:41.92.1
+    restart: no
+    environment:
+      - TZ=Asia/Bangkok
+      - RENOVATE_REPOSITORIES=repo
+      - RENOVATE_GIT_AUTHOR="renovate[bot] <29139614+renovate[bot]@users.noreply.github.com>"
+      - RENOVATE_TOKEN="$RENOVATE_TOKEN"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./renovate/config.js:/usr/src/app/config.js
+
+  honami-gitops:
+    container_name: honami-gitops-dev
+    build: .
+    restart: no
+    env_file:
+      - .env

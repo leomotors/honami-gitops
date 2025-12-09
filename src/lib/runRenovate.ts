@@ -1,3 +1,4 @@
+import { environment } from "../environment.js";
 import { addMessage, sendMessage } from "./discord.js";
 import { exec } from "./exec.js";
 import { log } from "./logger.js";
@@ -19,8 +20,11 @@ export async function runRenovate() {
 
   log.info("Running Renovate...");
   try {
-    const { stderr, stdout } = await exec("pnpm run renovate");
+    const { stderr, stdout } = await exec(
+      `docker run -a ${environment.RENOVATE_CONTAINER_NAME}`,
+    );
     log.normal(stdout);
+
     if (stderr) {
       log.error(stderr);
     }
