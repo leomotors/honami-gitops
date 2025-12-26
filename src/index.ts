@@ -13,12 +13,18 @@ type RequestState = {
 };
 
 const app = new Elysia()
-  .use(openapi())
   .decorate("requestState", {} as RequestState)
-  .onRequest(({ request, requestState, server }) => {
+  .onRequest(({ request, requestState, server, set }) => {
     const ip = getIP(request, server);
 
     requestState.ip = ip;
+
+    const pathName = new URL(request.url).pathname;
+    // Block non-local requests to non-webhook endpoints
+    if (!isLocalIP(ip) && !pathName.startsWith("/webhook/")) {
+      set.status = 403;
+      return "Forbidden";
+    }
   })
   .onAfterResponse(({ set, request, path, requestState }) => {
     const ip = requestState.ip ?? "Undefined Shit";
@@ -30,9 +36,68 @@ const app = new Elysia()
 
     log.normal(`🌐 ${request.method} ${path} ${set.status} - ${ip}`);
   })
-  .get("/health", () => "OK\n")
-  .post("/webhook/gitsync", gitsync)
-  .post("/webhook/renovate", renovate)
+  .use(
+    openapi({
+      documentation: {
+        info: {
+          title: "Honami GitOps API",
+          version: APP_VERSION,
+          description: "GitOps automation service for managing deployments",
+        },
+        tags: [
+          { name: "Health", description: "Health check endpoints" },
+          {
+            name: "Webhook",
+            description:
+              "Webhook endpoints intended to be called by external services",
+          },
+        ],
+        components: {
+          securitySchemes: {
+            webhookAuth: {
+              type: "apiKey",
+              in: "header",
+              name: "authorization",
+              description: "Webhook authentication password",
+            },
+          },
+        },
+      },
+    }),
+  )
+  .get("/health", () => "OK\n", {
+    detail: {
+      summary: "Health check",
+      description: "Returns OK if the service is running",
+      tags: ["Health"],
+    },
+  })
+  .post("/webhook/gitsync", gitsync, {
+    detail: {
+      summary: "Git sync webhook",
+      description:
+        "Triggers a git pull operation and restarts docker-compose services if compose files are changed. Requires authentication via the authorization header.",
+      tags: ["Webhook"],
+      security: [
+        {
+          webhookAuth: [],
+        },
+      ],
+    },
+  })
+  .post("/webhook/renovate", renovate, {
+    detail: {
+      summary: "Renovate webhook",
+      description:
+        "Triggers a Renovate bot run for dependency updates. Requires authentication via the authorization header.",
+      tags: ["Webhook"],
+      security: [
+        {
+          webhookAuth: [],
+        },
+      ],
+    },
+  })
   .listen(8940);
 
 console.log(
