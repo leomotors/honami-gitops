@@ -1,0 +1,26 @@
+services:
+  espresso-generator:
+    container_name: espresso-generator
+    image: ghcr.io/leomotors/espresso-generator:2.0.0
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:5204:5204
+    environment:
+      - TZ=Asia/Bangkok
+      - ORIGIN=http://localhost:5204
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.espresso-generator.rule=Host(`espresso.lmhome.dev`)"
+      - "traefik.http.routers.espresso-generator.entrypoints=https"
+      - "traefik.http.routers.espresso-generator.tls=true"
+      - "traefik.http.routers.espresso-generator.service=espresso-generator"
+      - "traefik.http.services.espresso-generator.loadbalancer.server.port=5204"
+
+networks:
+  traefik:
+    external: true

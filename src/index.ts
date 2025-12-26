@@ -4,6 +4,7 @@ import { Elysia } from "elysia";
 
 import { getIP, isLocalIP } from "./core/ip.js";
 import { log } from "./core/logger.js";
+import { composeController } from "./modules/compose/index.js";
 import { healthController } from "./modules/health/index.js";
 import { webhookController } from "./modules/webhook/index.js";
 import { setupRenovate } from "./modules/webhook/renovate.js";
@@ -51,6 +52,11 @@ const app = new Elysia()
             description:
               "Webhook endpoints intended to be called by external services",
           },
+          {
+            name: "Compose",
+            description:
+              "Docker Compose management endpoints for monitoring container status",
+          },
         ],
         components: {
           securitySchemes: {
@@ -66,6 +72,7 @@ const app = new Elysia()
     }),
   )
   .use(healthController)
+  .use(composeController)
   .use(webhookController)
   .listen(8940);
 
@@ -73,6 +80,9 @@ console.log(
   chalk.green(
     `Starting Honami GitOps v${APP_VERSION} at PORT ${app.server?.port}`,
   ),
+);
+console.log(
+  `📖 See OpenAPI docs at http://localhost:${app.server?.port}/openapi`,
 );
 
 process.on("SIGINT", async () => {

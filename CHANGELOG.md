@@ -4,6 +4,11 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [2.2.0] - 2025-12-27
+
+- refactor code to by domain
+- new compose module
+
 ## [2.1.0] - 2025-12-26
 
 - docs: update docs for endpoints

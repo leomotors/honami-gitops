@@ -5,11 +5,15 @@ import { log } from "../logger.js";
 
 const _exec = promisify(execCallback);
 
-export async function exec(command: string) {
-  log.normal(`▶️ ${command}`);
+export async function exec(command: string, doLog = true) {
+  if (doLog) {
+    log.normal(`▶️ ${command}`);
+  }
   const { stderr, stdout } = await _exec(command);
 
-  log.normal(`✅ ${stdout}`);
+  if (doLog) {
+    log.normal(`✅ ${stdout}`);
+  }
   if (stderr) {
     log.error(`🚨 ${stderr}`);
   }
