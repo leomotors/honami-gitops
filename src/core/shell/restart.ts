@@ -2,8 +2,9 @@ import fs from "node:fs/promises";
 
 import postgres from "postgres";
 
-import { environment } from "../environment.js";
-import { addMessage } from "./discord.js";
+import { environment } from "@/config/environment.js";
+
+import { addMessage } from "../discord.js";
 import { exec } from "./exec.js";
 
 /**

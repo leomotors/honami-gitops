@@ -8,6 +8,10 @@
     "skipLibCheck": true,
     "moduleResolution": "NodeNext",
     "noUncheckedIndexedAccess": true,
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }

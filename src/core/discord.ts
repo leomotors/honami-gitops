@@ -1,4 +1,5 @@
-import { environment } from "../environment.js";
+import { environment } from "@/config/environment.js";
+
 import { log } from "./logger.js";
 
 const endpoint = "https://discord.com/api/v10";

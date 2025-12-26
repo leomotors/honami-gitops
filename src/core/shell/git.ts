@@ -1,5 +1,5 @@
+import { log } from "../logger.js";
 import { exec } from "./exec.js";
-import { log } from "./logger.js";
 
 export async function getChangedFiles(
   path: string,

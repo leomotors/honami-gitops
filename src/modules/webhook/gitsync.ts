@@ -1,13 +1,13 @@
 import { Context } from "elysia";
 
-import { environment } from "../environment.js";
-import { addMessage, sendMessage } from "../lib/discord.js";
-import { exec } from "../lib/exec.js";
-import { getChangedFiles, getCurrentHash } from "../lib/git.js";
-import { log } from "../lib/logger.js";
-import { restart } from "../lib/restart.js";
+import { environment } from "@/config/environment.js";
+import { addMessage, sendMessage } from "@/core/discord.js";
+import { log } from "@/core/logger.js";
+import { exec } from "@/core/shell/exec.js";
+import { getChangedFiles, getCurrentHash } from "@/core/shell/git.js";
+import { restart } from "@/core/shell/restart.js";
 
-export async function gitsync({ request, set }: Context) {
+export async function handleGitSyncWebhook({ request, set }: Context) {
   const authorization = request.headers.get("authorization");
 
   if (authorization !== environment.WEBHOOK_PASSWORD) {
@@ -46,7 +46,7 @@ async function gitSync() {
     after,
   );
   const composeFiles = changedFiles.filter(
-    (file) =>
+    (file: string) =>
       file.endsWith("docker-compose.yml") ||
       file.endsWith("docker-compose.yaml"),
   );
@@ -59,7 +59,7 @@ async function gitSync() {
   log.normal(`GIT SYNC: ${composeFiles}`);
   addMessage(
     `# GIT SYNC (${environment.DEVICE_NAME}): ${composeFiles.length} compose files changed\n${composeFiles
-      .map((f) => `- ${f}`)
+      .map((f: string) => `- ${f}`)
       .join("\n")}`,
   );
 

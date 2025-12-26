@@ -1,7 +1,7 @@
 import { exec as execCallback } from "node:child_process";
 import { promisify } from "node:util";
 
-import { log } from "./logger.js";
+import { log } from "../logger.js";
 
 const _exec = promisify(execCallback);
 
