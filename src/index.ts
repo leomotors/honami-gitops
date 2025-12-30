@@ -24,6 +24,7 @@ const app = new Elysia()
     // Block non-local requests to non-webhook endpoints
     if (!isLocalIP(ip) && !pathName.startsWith("/webhook/")) {
       set.status = 403;
+      console.log(`🌐 Found forbidden request from IP: ${ip} to ${pathName}`);
       return "Forbidden";
     }
   })

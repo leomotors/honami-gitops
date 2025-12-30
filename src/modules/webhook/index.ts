@@ -9,7 +9,7 @@ export const webhookController = new Elysia({
     tags: ["Webhook"],
   },
 })
-  .post("/webhook/gitsync", handleGitSyncWebhook, {
+  .post("/gitsync", handleGitSyncWebhook, {
     detail: {
       summary: "Git sync webhook",
       description:
@@ -22,7 +22,7 @@ export const webhookController = new Elysia({
       ],
     },
   })
-  .post("/webhook/renovate", handleRenovateWebhook, {
+  .post("/renovate", handleRenovateWebhook, {
     detail: {
       summary: "Renovate webhook",
       description:
