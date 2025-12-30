@@ -1,6 +1,6 @@
 {
   "name": "honami-gitops",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -22,9 +22,7 @@
     "postgres": "^3.4.7",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
+    "yaml": "^2.8.2",
     "zod": "^4.2.1"
-  },
-  "dependencies": {
-    "yaml": "^2.8.2"
   }
 }

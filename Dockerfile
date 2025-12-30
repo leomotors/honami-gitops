@@ -13,21 +13,22 @@ RUN bun install --frozen-lockfile
 COPY tsconfig.json build.ts ./
 COPY src ./src
 
-# Build the binary
+# Build the bundled output
 RUN bun run build
 
 # Runtime stage
-FROM alpine:3.23 AS runner
+FROM oven/bun:1-alpine AS runner
 
-RUN apk add --no-cache libstdc++ libgcc docker docker-compose git openssh
+RUN apk add --no-cache docker docker-compose git openssh
 
 WORKDIR /app
 
-# Copy the compiled binary from builder
-COPY --from=builder --chown=appuser:appuser /app/out/src /app/server
+# Copy node_modules and bundled code from builder
+# COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
 # Expose port
 EXPOSE 8940
 
-# Run the binary
-CMD ["/app/server"]
+# Run with bun
+CMD ["bun", "run", "dist/index.js"]
