@@ -11,10 +11,16 @@ export const composeController = new Elysia({
 }).get(
   "/",
   async () => {
+    const startTime = Date.now();
     const composeFiles = await scanComposeFiles();
+    const timeTaken = Date.now() - startTime;
 
     return {
       composeFiles,
+      metadata: {
+        datetime: new Date().toISOString(),
+        timeTaken,
+      },
     };
   },
   {

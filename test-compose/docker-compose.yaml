@@ -1,3 +1,5 @@
+# runs-on: emu
+
 services:
   espresso-generator:
     container_name: espresso-generator
