@@ -4,6 +4,10 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [2.5.0] - 2026-01-26
+
+- (preview) update compose endpoint to print more information
+
 ## [2.4.0] - 2025-12-30
 
 - migrate image to bundle source code instead of compile to binary

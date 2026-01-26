@@ -6,7 +6,7 @@ import {
   getCachedResult,
   postponeNextScan,
   triggerScan,
-} from "./compose.service.js";
+} from "./cache.service.js";
 import { ComposeListResponseSchema } from "./schema.js";
 
 export const composeController = new Elysia({

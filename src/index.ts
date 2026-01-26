@@ -4,7 +4,7 @@ import { Elysia } from "elysia";
 
 import { getIP, isLocalIP } from "./core/ip.js";
 import { log } from "./core/logger.js";
-import { startBackgroundScanning } from "./modules/compose/compose.service.js";
+import { startBackgroundScanning } from "./modules/compose/cache.service.js";
 import { composeController } from "./modules/compose/index.js";
 import { healthController } from "./modules/health/index.js";
 import { webhookController } from "./modules/webhook/index.js";
