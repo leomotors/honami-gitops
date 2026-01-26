@@ -70,3 +70,5 @@ export const ComposeListResponseSchema = t.Object({
     timeTaken: t.Number(),
   }),
 });
+
+export type ComposeListResponse = Static<typeof ComposeListResponseSchema>;

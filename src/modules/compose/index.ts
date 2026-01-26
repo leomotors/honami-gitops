@@ -1,6 +1,12 @@
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 
-import { scanComposeFiles } from "./compose.service.js";
+import { ErrorSchema } from "@/shared/schema.js";
+
+import {
+  getCachedResult,
+  postponeNextScan,
+  triggerScan,
+} from "./compose.service.js";
 import { ComposeListResponseSchema } from "./schema.js";
 
 export const composeController = new Elysia({
@@ -8,30 +14,56 @@ export const composeController = new Elysia({
   detail: {
     tags: ["Compose"],
   },
-}).get(
-  "/",
-  async () => {
-    const startTime = Date.now();
-    const composeFiles = await scanComposeFiles();
-    const timeTaken = Date.now() - startTime;
+})
+  .get(
+    "/",
+    async ({ set }) => {
+      const cachedResult = getCachedResult();
 
-    return {
-      composeFiles,
-      metadata: {
-        datetime: new Date().toISOString(),
-        timeTaken,
+      if (!cachedResult) {
+        set.status = 503;
+        return {
+          message: "No cached scan results available",
+        };
+      }
+
+      return cachedResult;
+    },
+    {
+      detail: {
+        summary: "Get cached compose files",
+        description:
+          "Returns cached scan results for all docker-compose files. Returns 503 if no cache is available.",
+        tags: ["Compose"],
       },
-    };
-  },
-  {
-    detail: {
-      summary: "List compose files",
-      description:
-        "Scans for all docker-compose files in the repository that are configured to run on this device. Returns detailed information about containers, their status, ports, environment variables, volumes, and labels.",
-      tags: ["Compose"],
+      response: {
+        200: ComposeListResponseSchema,
+        503: ErrorSchema,
+      },
     },
-    response: {
-      200: ComposeListResponseSchema,
+  )
+  .post(
+    "/",
+    () => {
+      triggerScan();
+      postponeNextScan();
+      return {
+        message: "Compose scan triggered",
+        status: "started",
+      };
     },
-  },
-);
+    {
+      detail: {
+        summary: "Trigger compose file scan",
+        description:
+          "Triggers a new scan of all docker-compose files in the background. Returns immediately. Also postpones the next scheduled scan.",
+        tags: ["Compose"],
+      },
+      response: {
+        200: t.Object({
+          message: t.String(),
+          status: t.String(),
+        }),
+      },
+    },
+  );
