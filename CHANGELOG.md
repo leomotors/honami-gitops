@@ -7,6 +7,7 @@ There is no versioning before 2.0.0 so the changelog is not here.
 ## [2.6.0] - 2026-01-30
 
 - feat: change ownership of changed files after git sync to prevent issues
+- feat: endpoint to restart all outdated compose services
 
 ## [2.5.0] - 2026-01-26
 

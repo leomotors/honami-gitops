@@ -5,7 +5,7 @@ import { addMessage, sendMessage } from "@/core/discord.js";
 import { log } from "@/core/logger.js";
 import { exec } from "@/core/shell/exec.js";
 import { getChangedFiles, getCurrentHash } from "@/core/shell/git.js";
-import { restart } from "@/core/shell/restart.js";
+import { restartComposeFiles } from "@/modules/compose/operations.js";
 
 export async function handleGitSyncWebhook({ request, set }: Context) {
   const authorization = request.headers.get("authorization");
@@ -56,25 +56,5 @@ async function gitSync() {
       file.endsWith("docker-compose.yaml"),
   );
 
-  if (composeFiles.length === 0) {
-    log.normal("GIT SYNC: No files, skipped");
-    return;
-  }
-
-  log.normal(`GIT SYNC: ${composeFiles}`);
-  addMessage(
-    `# GIT SYNC (${environment.DEVICE_NAME}): ${composeFiles.length} compose files changed\n${composeFiles
-      .map((f: string) => `- ${f}`)
-      .join("\n")}`,
-  );
-
-  try {
-    await restart(environment.REPO_PATH, composeFiles);
-  } catch (err) {
-    log.error("GIT SYNC : Restart failed!");
-    log.normal(`${err} ${(err as Error).stack}`);
-    addMessage(`# GIT SYNC (${environment.DEVICE_NAME}): Restart failed`);
-  } finally {
-    await sendMessage();
-  }
+  await restartComposeFiles(composeFiles, "GIT SYNC");
 }
