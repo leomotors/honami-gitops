@@ -14,6 +14,9 @@ const environmentSchema = z.object({
   RENOVATE_CONTAINER_NAME: z.string().nonempty().default("renovate"),
 
   COMPOSE_SCAN_INTERVAL: z.coerce.number().default(600),
+
+  UID: z.coerce.number().default(1000),
+  GID: z.coerce.number().default(1000),
 });
 
 export const environment = environmentSchema.parse(process.env);

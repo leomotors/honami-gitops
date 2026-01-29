@@ -45,6 +45,11 @@ async function gitSync() {
     before,
     after,
   );
+
+  await exec(
+    `chown ${environment.UID}:${environment.GID} ${changedFiles.map((s) => `"${s}"`).join(" ")}`,
+  );
+
   const composeFiles = changedFiles.filter(
     (file: string) =>
       file.endsWith("docker-compose.yml") ||

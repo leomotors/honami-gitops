@@ -4,6 +4,10 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [2.6.0] - 2026-01-30
+
+- feat: change ownership of changed files after git sync to prevent issues
+
 ## [2.5.0] - 2026-01-26
 
 - (preview) update compose endpoint to print more information
