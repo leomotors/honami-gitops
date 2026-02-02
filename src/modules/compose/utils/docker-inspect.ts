@@ -83,11 +83,13 @@ export async function getContainerStatus(
     const actualLabels = container.Config.Labels || {};
     for (const [key, expectedValue] of Object.entries(expectedLabels)) {
       const actualValue = actualLabels[key];
-      if (actualValue !== expectedValue) {
+      // Normalize expected value: Docker Compose uses $$ to escape $ in YAML
+      const normalizedExpected = expectedValue.replace(/\$\$/g, "$");
+      if (actualValue !== normalizedExpected) {
         const actualStr = actualValue === undefined ? "(not set)" : actualValue;
         outdatedDetails.push({
           type: "labels",
-          message: `Label '${key}' differs: expected '${expectedValue}' but running '${actualStr}'`,
+          message: `Label '${key}' differs: expected '${normalizedExpected}' but running '${actualStr}'`,
         });
       }
     }

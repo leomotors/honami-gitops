@@ -64,11 +64,11 @@ export const ComposeInfoSchema = t.Object({
 export type ComposeInfo = Static<typeof ComposeInfoSchema>;
 
 export const ComposeListResponseSchema = t.Object({
-  composeFiles: t.Array(ComposeInfoSchema),
   metadata: t.Object({
     datetime: t.String(),
     timeTaken: t.Number(),
   }),
+  composeFiles: t.Array(ComposeInfoSchema),
 });
 
 export type ComposeListResponse = Static<typeof ComposeListResponseSchema>;

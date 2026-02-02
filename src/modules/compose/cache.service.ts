@@ -18,11 +18,11 @@ export async function triggerScan(): Promise<ComposeListResponse> {
   const timeTaken = Date.now() - startTime;
 
   cachedResult = {
-    composeFiles,
     metadata: {
       datetime: new Date().toISOString(),
       timeTaken,
     },
+    composeFiles,
   };
 
   log.info(

@@ -78,8 +78,8 @@ export function setupRenovate() {
           1000 * 60 * 60,
         );
       },
-      // Delay the first run by 3 minutes to not consume too much resources
-      1000 * 60 * 3,
+      // Delay the first run by 15 minutes to not consume too much resources
+      1000 * 60 * 15,
     );
   } else {
     console.log(chalk.yellow("Renovate is disabled"));

@@ -4,6 +4,12 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [2.7.0] - 2026-02-02
+
+- fix: normalize Docker Compose escaped dollar signs (`$$` to `$`) in label comparison to prevent false outdated detection
+- refactor: reorder metadata and composeFiles fields in response schema for better readability
+- chore: delay renovate first run from 3 minutes to 15 minutes
+
 ## [2.6.0] - 2026-01-30
 
 - feat: change ownership of changed files after git sync to prevent issues
