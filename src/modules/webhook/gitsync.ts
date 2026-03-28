@@ -47,7 +47,7 @@ async function gitSync() {
   );
 
   await exec(
-    `chown ${environment.UID}:${environment.GID} ${changedFiles.map((s) => `"${s}"`).join(" ")}`,
+    `cd ${environment.REPO_PATH} && chown ${environment.UID}:${environment.GID} ${changedFiles.map((s) => `"${s}"`).join(" ")}`,
   );
 
   const composeFiles = changedFiles.filter(

@@ -1,0 +1,393 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Honami GitOps API",
+    "description": "GitOps automation service for managing deployments",
+    "version": "dev"
+  },
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Health check endpoints"
+    },
+    {
+      "name": "Webhook",
+      "description": "Webhook endpoints intended to be called by external services"
+    },
+    {
+      "name": "Compose",
+      "description": "Docker Compose management endpoints for monitoring container status"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "webhookAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization",
+        "description": "Webhook authentication password"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health check",
+        "description": "Returns OK if the service is running",
+        "operationId": "getHealth"
+      }
+    },
+    "/compose/": {
+      "get": {
+        "tags": [
+          "Compose"
+        ],
+        "summary": "Get cached compose files",
+        "description": "Returns cached scan results for all docker-compose files. Returns 503 if no cache is available.",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "metadata",
+                    "composeFiles"
+                  ],
+                  "properties": {
+                    "metadata": {
+                      "type": "object",
+                      "required": [
+                        "datetime",
+                        "timeTaken"
+                      ],
+                      "properties": {
+                        "datetime": {
+                          "type": "string"
+                        },
+                        "timeTaken": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "composeFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "path",
+                          "status",
+                          "containers"
+                        ],
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "Down",
+                              "Outdated",
+                              "Up",
+                              "Unhealthy",
+                              "Healthy",
+                              "Completed"
+                            ]
+                          },
+                          "containers": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "name",
+                                "image",
+                                "status",
+                                "ports",
+                                "environment",
+                                "volumes",
+                                "labels"
+                              ],
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "image": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "enum": [
+                                    "Down",
+                                    "Outdated",
+                                    "Up",
+                                    "Unhealthy",
+                                    "Healthy",
+                                    "Completed"
+                                  ]
+                                },
+                                "outdatedDetails": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "type",
+                                      "message"
+                                    ],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "image",
+                                          "environment",
+                                          "labels",
+                                          "volumes",
+                                          "ports"
+                                        ]
+                                      },
+                                      "message": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "ports": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "target"
+                                    ],
+                                    "properties": {
+                                      "target": {
+                                        "type": "number"
+                                      },
+                                      "published": {
+                                        "type": "string"
+                                      },
+                                      "hostIp": {
+                                        "type": "string"
+                                      },
+                                      "protocol": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "environment": {
+                                  "type": "object",
+                                  "patternProperties": {
+                                    "^(.*)$": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                "volumes": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "type",
+                                      "target"
+                                    ],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string"
+                                      },
+                                      "source": {
+                                        "type": "string"
+                                      },
+                                      "target": {
+                                        "type": "string"
+                                      },
+                                      "read_only": {
+                                        "type": "boolean"
+                                      }
+                                    }
+                                  }
+                                },
+                                "labels": {
+                                  "type": "object",
+                                  "patternProperties": {
+                                    "^(.*)$": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Response for status 503",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getCompose"
+      },
+      "post": {
+        "tags": [
+          "Compose"
+        ],
+        "summary": "Trigger compose file scan",
+        "description": "Triggers a new scan of all docker-compose files in the background. Returns immediately. Also postpones the next scheduled scan.",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "status"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "postCompose"
+      }
+    },
+    "/compose/outdated": {
+      "post": {
+        "tags": [
+          "Compose"
+        ],
+        "summary": "Restart outdated compose files",
+        "description": "Identifies all compose files with outdated containers and triggers a restart. Uses cached scan results. Returns 503 if no cache is available.",
+        "responses": {
+          "200": {
+            "description": "Response for status 200",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "status",
+                    "outdatedFiles"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "outdatedFiles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Response for status 503",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "postComposeOutdated"
+      }
+    },
+    "/webhook/gitsync": {
+      "post": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Git sync webhook",
+        "description": "Triggers a git pull operation and restarts docker-compose services if compose files are changed. Requires authentication via the authorization header.",
+        "security": [
+          {
+            "webhookAuth": []
+          }
+        ],
+        "operationId": "postWebhookGitsync"
+      }
+    },
+    "/webhook/renovate": {
+      "post": {
+        "tags": [
+          "Webhook"
+        ],
+        "summary": "Renovate webhook",
+        "description": "Triggers a Renovate bot run for dependency updates. Requires authentication via the authorization header.",
+        "security": [
+          {
+            "webhookAuth": []
+          }
+        ],
+        "operationId": "postWebhookRenovate"
+      }
+    },
+    "": {
+      "get": {
+        "operationId": "getIndex"
+      }
+    },
+    "/*": {
+      "get": {
+        "operationId": "get*"
+      }
+    }
+  }
+}

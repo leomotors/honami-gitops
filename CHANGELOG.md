@@ -4,6 +4,11 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [3.0.0] - 2026-03-19
+
+- fix: chown command in git sync, wrong path
+- feat: frontend 🔥
+
 ## [2.7.0] - 2026-02-02
 
 - fix: normalize Docker Compose escaped dollar signs (`$$` to `$`) in label comparison to prevent false outdated detection

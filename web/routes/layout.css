@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", monospace;
+}
+
+@keyframes gradient-bg {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(244, 63, 94, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.35);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  background: linear-gradient(
+    135deg,
+    #fdf2f8 0%,
+    #fce7f3 20%,
+    #f5f3ff 45%,
+    #fdf4ff 65%,
+    #fce7f3 85%,
+    #fdf2f8 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-bg 20s ease infinite;
+  min-height: 100vh;
+}

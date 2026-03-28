@@ -1,6 +1,9 @@
+import { cors } from "@elysiajs/cors";
 import { openapi } from "@elysiajs/openapi";
+import { staticPlugin } from "@elysiajs/static";
 import chalk from "chalk";
 import { Elysia } from "elysia";
+import { stringify } from "yaml";
 
 import { getIP, isLocalIP } from "./core/ip.js";
 import { log } from "./core/logger.js";
@@ -73,19 +76,23 @@ const app = new Elysia()
       },
     }),
   )
+  .use(Bun.env.NODE_ENV !== "production" ? cors() : (app) => app)
   .use(healthController)
   .use(composeController)
   .use(webhookController)
+  .use(
+    await staticPlugin({
+      assets: "build",
+      prefix: "/",
+      indexHTML: true,
+    }),
+  )
   .listen(8940);
 
-console.log(
-  chalk.green(
-    `Starting Honami GitOps v${APP_VERSION} at PORT ${app.server?.port}`,
-  ),
-);
-console.log(
-  `📖 See OpenAPI docs at http://localhost:${app.server?.port}/openapi`,
-);
+const appUrl = `http://${app.server?.hostname}:${app.server?.port}`;
+
+console.log(chalk.green(`Starting Honami GitOps v${APP_VERSION} at ${appUrl}`));
+console.log(`📖 See OpenAPI docs at ${appUrl}/openapi`);
 
 process.on("SIGINT", async () => {
   console.log(chalk.yellow("Recieved shutdown signal, closing..."));
@@ -95,3 +102,20 @@ process.on("SIGINT", async () => {
 
 setupRenovate();
 startBackgroundScanning();
+
+if (app.server?.development) {
+  const openapiSpec = await fetch(appUrl + "/openapi/json").then((r) =>
+    r.json(),
+  );
+
+  await Bun.write("docs/openapi.json", JSON.stringify(openapiSpec, null, 2));
+  await Bun.write("docs/openapi.yaml", stringify(openapiSpec));
+  console.log(
+    "📝 OpenAPI spec has been saved to docs/openapi.json and docs/openapi.yaml ✅",
+  );
+  console.log(
+    `📖 Swagger Page is available at \x1b[1m${appUrl}/openapi\x1b[0m`,
+  );
+}
+
+export type App = typeof app;
