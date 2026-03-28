@@ -110,7 +110,8 @@
                                 "ports",
                                 "environment",
                                 "volumes",
-                                "labels"
+                                "labels",
+                                "networks"
                               ],
                               "properties": {
                                 "name": {
@@ -222,6 +223,24 @@
                                   "patternProperties": {
                                     "^(.*)$": {
                                       "type": "string"
+                                    }
+                                  }
+                                },
+                                "networks": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "name",
+                                      "external"
+                                    ],
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "external": {
+                                        "type": "boolean"
+                                      }
                                     }
                                   }
                                 }

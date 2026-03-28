@@ -29,26 +29,33 @@ export interface DockerInspect {
   };
 }
 
+export interface ComposeServiceDefinition {
+  container_name?: string;
+  image: string;
+  restart?: string;
+  ports?: Array<{
+    target: number;
+    published?: string;
+    protocol?: string;
+  }>;
+  environment?: Record<string, string | null>;
+  volumes?: Array<{
+    type: string;
+    source?: string;
+    target: string;
+    read_only?: boolean;
+  }>;
+  labels?: Record<string, string>;
+  /** Normalized compose JSON uses an object keyed by network name */
+  networks?: Record<string, unknown> | string[];
+}
+
+export interface ComposeNetworkDefinition {
+  name?: string;
+  external?: boolean;
+}
+
 export interface ComposeConfig {
-  services: Record<
-    string,
-    {
-      container_name?: string;
-      image: string;
-      restart?: string;
-      ports?: Array<{
-        target: number;
-        published?: string;
-        protocol?: string;
-      }>;
-      environment?: Record<string, string | null>;
-      volumes?: Array<{
-        type: string;
-        source?: string;
-        target: string;
-        read_only?: boolean;
-      }>;
-      labels?: Record<string, string>;
-    }
-  >;
+  networks?: Record<string, ComposeNetworkDefinition>;
+  services: Record<string, ComposeServiceDefinition>;
 }

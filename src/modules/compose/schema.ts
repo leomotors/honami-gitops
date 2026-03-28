@@ -51,6 +51,13 @@ export const ContainerInfoSchema = t.Object({
     }),
   ),
   labels: t.Record(t.String(), t.String()),
+  /** Compose networks this service uses (project + external); `external` mirrors top-level `networks:` */
+  networks: t.Array(
+    t.Object({
+      name: t.String(),
+      external: t.Boolean(),
+    }),
+  ),
 });
 
 export type ContainerInfo = Static<typeof ContainerInfoSchema>;

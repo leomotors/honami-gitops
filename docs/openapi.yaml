@@ -86,6 +86,7 @@ paths:
                               - environment
                               - volumes
                               - labels
+                              - networks
                             properties:
                               name:
                                 type: string
@@ -161,6 +162,18 @@ paths:
                                 patternProperties:
                                   ^(.*)$:
                                     type: string
+                              networks:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                    - name
+                                    - external
+                                  properties:
+                                    name:
+                                      type: string
+                                    external:
+                                      type: boolean
         "503":
           description: Response for status 503
           content:

@@ -1,6 +1,11 @@
 <script lang="ts">
   import StatusBadge from "$components/StatusBadge.svelte";
-  import { formatPorts, shortPath } from "$lib/compose/composePageHelpers";
+  import {
+    formatComposeNetworks,
+    formatPorts,
+    formatVolumeSummary,
+    shortPath,
+  } from "$lib/compose/composePageHelpers";
   import type { ComposeFile } from "$lib/types";
   import { STATUS_STYLES } from "$lib/types";
 
@@ -45,6 +50,16 @@
             class="px-4 py-2 text-left text-[11px] font-semibold tracking-wider whitespace-nowrap text-slate-400 uppercase"
           >
             Ports
+          </th>
+          <th
+            class="px-4 py-2 text-left text-[11px] font-semibold tracking-wider text-slate-400 uppercase"
+          >
+            Volumes
+          </th>
+          <th
+            class="px-4 py-2 text-left text-[11px] font-semibold tracking-wider text-slate-400 uppercase"
+          >
+            Networks
           </th>
         </tr>
       </thead>
@@ -118,12 +133,22 @@
             >
               {formatPorts(container.ports)}
             </td>
+            <td
+              class="max-w-56 px-4 py-2.5 font-mono text-[11px] wrap-break-word text-slate-500"
+            >
+              {formatVolumeSummary(container)}
+            </td>
+            <td
+              class="max-w-48 px-4 py-2.5 font-mono text-[11px] wrap-break-word text-slate-500"
+            >
+              {formatComposeNetworks(container.networks)}
+            </td>
           </tr>
 
           {#if hasDetails && expandedContainers[containerKey]}
             <tr>
               <td
-                colspan="4"
+                colspan="6"
                 class="bg-rose-50/60 px-4 py-3"
                 style="animation: fade-in-up 0.15s ease-out;"
               >

@@ -12,9 +12,12 @@ RUN bun install --frozen-lockfile
 # Copy source code
 COPY tsconfig.json build.ts ./
 COPY src ./src
+COPY web ./web
+COPY static ./static
+COPY vite.config.ts svelte.config.js ./
 
-# Build the bundled output
-RUN bun run build
+# Build server bundle and static frontend (output: dist/, build/)
+RUN bun run build && bun run web:build
 
 # Runtime stage
 FROM oven/bun:1-alpine AS runner
@@ -26,6 +29,7 @@ WORKDIR /app
 # Copy node_modules and bundled code from builder
 # COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/build ./build
 
 # Expose port
 EXPOSE 8940

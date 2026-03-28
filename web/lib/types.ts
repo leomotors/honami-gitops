@@ -30,6 +30,8 @@ export type Container = {
     read_only?: boolean;
   }[];
   labels: Record<string, string>;
+  /** Compose networks (project + external); `external` from compose `networks:` */
+  networks: { name: string; external: boolean }[];
 };
 
 export type ComposeFile = {

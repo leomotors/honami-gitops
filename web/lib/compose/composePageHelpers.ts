@@ -82,3 +82,35 @@ export function formatPorts(ports: Container["ports"]): string {
     .map((p) => (p.published ? `${p.published}:${p.target}` : String(p.target)))
     .join(", ");
 }
+
+/** Bind mounts under `/mnt/<disk>/…` are shown as the disk id only (e.g. md0, md1). */
+export function formatBindSourceDisplay(source: string): string {
+  const m = /^\/mnt\/([^/]+)(?:\/.*)?$/.exec(source);
+  if (m) return m[1];
+  return source;
+}
+
+export function formatVolumeSummary(container: Container): string {
+  const vols = container.volumes;
+  if (!vols.length) return "—";
+  return vols
+    .map((v) => {
+      if (v.type === "bind" && v.source) {
+        const src = formatBindSourceDisplay(v.source);
+        return `${src} → ${v.target}`;
+      }
+      if (v.source) return `${v.source} → ${v.target}`;
+      return v.target;
+    })
+    .join(", ");
+}
+
+export function formatComposeNetworks(
+  networks: Container["networks"] | undefined,
+): string {
+  const list = networks ?? [];
+  if (!list.length) return "—";
+  return list
+    .map((n) => (n.external ? `${n.name} (external)` : n.name))
+    .join(", ");
+}

@@ -12,6 +12,7 @@ import {
 } from "./utils/compose-file.js";
 import { getContainerStatus } from "./utils/docker-inspect.js";
 import { getActualPorts } from "./utils/port-mapper.js";
+import { getServiceComposeNetworks } from "./utils/service-networks.js";
 
 function getOverallStatus(containers: ContainerInfo[]): ContainerStatus {
   if (containers.length === 0) return "Down";
@@ -54,6 +55,7 @@ export async function scanComposeFiles(): Promise<ComposeInfo[]> {
 
     for (const [serviceName, service] of Object.entries(config.services)) {
       const containerName = service.container_name || serviceName;
+      const networks = getServiceComposeNetworks(service, config.networks);
       const { status, outdatedDetails } = await getContainerStatus(
         containerName,
         service.image,
@@ -87,6 +89,7 @@ export async function scanComposeFiles(): Promise<ComposeInfo[]> {
         environment: service.environment || {},
         volumes: service.volumes || [],
         labels: service.labels || {},
+        networks,
       });
     }
 
