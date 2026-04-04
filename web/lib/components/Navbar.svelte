@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { resolve } from "$app/paths";
+  import { asset, resolve } from "$app/paths";
   import { page } from "$app/state";
 
   const links = [
@@ -15,7 +15,7 @@
   <div class="mx-auto flex max-w-7xl items-center gap-6 px-6 py-4">
     <a href={resolve("/")} class="flex items-center gap-3">
       <img
-        src="/honami-nom.webp"
+        src={asset("/honami-nom.webp")}
         alt="Honami"
         class="h-8 w-8 rounded-lg object-cover shadow-md shadow-pink-200"
       />
