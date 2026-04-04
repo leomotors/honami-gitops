@@ -25,6 +25,11 @@ async function gitSync() {
 
   try {
     await exec(`cd ${environment.REPO_PATH} && git pull`);
+
+    // Reset ownership of .git folders
+    await exec(
+      `cd ${environment.REPO_PATH} && chown -R ${environment.UID}:${environment.GID} .git`,
+    );
   } catch (err) {
     log.error("GIT SYNC: Pull failed!");
     log.normal(`${err} ${(err as Error)?.stack}`);

@@ -51,6 +51,17 @@ html {
 }
 
 body {
+  min-height: 100vh;
+  position: relative;
+  background-color: #fdf2f8;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background: linear-gradient(
     135deg,
     #fdf2f8 0%,
@@ -62,5 +73,4 @@ body {
   );
   background-size: 400% 400%;
   animation: gradient-bg 20s ease infinite;
-  min-height: 100vh;
 }

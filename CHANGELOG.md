@@ -4,6 +4,12 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [3.1.0] - 2026-04-04
+
+- fix: git ownership after gitsync
+- new page in frontend: network and drive dependencies
+- feat: cute icon/logo!
+
 ## [3.0.0] - 2026-03-19
 
 - fix: chown command in git sync, wrong path
