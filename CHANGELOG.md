@@ -4,6 +4,10 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
+## [Unreleased - patch]
+
+- chore: bump dependencies
+
 ## [3.1.1] - 2026-04-05
 
 - fix: home page bug

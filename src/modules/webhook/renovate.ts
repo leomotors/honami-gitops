@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Context } from "elysia";
+import type { Context } from "elysia";
 
 import { environment } from "@/config/environment.js";
 import { addMessage, sendMessage } from "@/core/discord.js";

@@ -1,10 +1,5 @@
 export type Status =
-  | "Down"
-  | "Outdated"
-  | "Up"
-  | "Unhealthy"
-  | "Healthy"
-  | "Completed";
+  "Down" | "Outdated" | "Up" | "Unhealthy" | "Healthy" | "Completed";
 
 export type OutdatedDetail = {
   type: string;

@@ -9,7 +9,6 @@
     "moduleResolution": "NodeNext",
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
