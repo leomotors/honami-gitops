@@ -45,14 +45,14 @@ describe("recreate", () => {
 
   test("does not start cron job services", async () => {
     expect(await run("cronjob")).toEqual([
-      "docker compose up --force-recreate --no-start renovate",
+      "docker compose up --force-recreate --no-start --no-deps renovate",
     ]);
   });
 
   test("splits mixed compose file by restart policy", async () => {
     expect(await run("mixed")).toEqual([
-      "docker compose up --force-recreate --no-start backup migrate",
       "docker compose up -d --force-recreate web",
+      "docker compose up --force-recreate --no-start --no-deps backup migrate",
     ]);
   });
 

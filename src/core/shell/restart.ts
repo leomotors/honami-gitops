@@ -64,14 +64,16 @@ export async function recreate(folderPath: string, filePath: string) {
     (isJob ? jobs : services).push(name);
   }
 
-  if (jobs.length > 0) {
-    await exec(
-      `cd ${folderPath} && docker compose up --force-recreate --no-start ${jobs.join(" ")}`,
-    );
-  }
+  // Services first so jobs attach to the new containers (network_mode:
+  // service:x); --no-deps keeps jobs from recreating them and leaving them down.
   if (services.length > 0) {
     await exec(
       `cd ${folderPath} && docker compose up -d --force-recreate ${services.join(" ")}`,
+    );
+  }
+  if (jobs.length > 0) {
+    await exec(
+      `cd ${folderPath} && docker compose up --force-recreate --no-start --no-deps ${jobs.join(" ")}`,
     );
   }
 }

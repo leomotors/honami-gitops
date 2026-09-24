@@ -43,10 +43,11 @@ export function createLiveMessage(): DiscordLiveMessage {
   let id: string | undefined;
 
   function content() {
-    const body = [...lines, "", footer].join("\n");
-    return body.length <= CONTENT_LIMIT
-      ? body
-      : `${body.slice(0, CONTENT_LIMIT - 3)}...`;
+    const body = lines.join("\n");
+    const tail = `\n\n${footer}`;
+    return body.length + tail.length <= CONTENT_LIMIT
+      ? body + tail
+      : `${body.slice(0, CONTENT_LIMIT - tail.length - 3)}...${tail}`;
   }
 
   return {
@@ -68,7 +69,7 @@ export function createLiveMessage(): DiscordLiveMessage {
         );
         if (!res) return;
 
-        const data = (await res.json()) as { id?: string };
+        const data = (await res.json().catch(() => ({}))) as { id?: string };
         id = data.id;
         return;
       }
