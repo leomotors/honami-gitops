@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import postgres from "postgres";
 
 import { environment } from "@/config/environment.js";
+import { getComposeConfig } from "@/modules/compose/utils/compose-file.js";
 
 import type { DiscordLiveMessage } from "../discord.js";
 import { exec } from "./exec.js";
@@ -45,6 +46,36 @@ async function checkRestart(
   return true;
 }
 
+/**
+ * Cron / manual jobs (no restart policy or `restart: no`) are recreated
+ * without starting, so a git sync does not trigger an unscheduled run.
+ */
+export async function recreate(folderPath: string, filePath: string) {
+  const config = await getComposeConfig(filePath);
+  if (!config) {
+    await exec(`cd ${folderPath} && docker compose up -d --force-recreate`);
+    return;
+  }
+
+  const jobs: string[] = [];
+  const services: string[] = [];
+  for (const [name, service] of Object.entries(config.services)) {
+    const isJob = !service.restart || service.restart === "no";
+    (isJob ? jobs : services).push(name);
+  }
+
+  if (jobs.length > 0) {
+    await exec(
+      `cd ${folderPath} && docker compose up --force-recreate --no-start ${jobs.join(" ")}`,
+    );
+  }
+  if (services.length > 0) {
+    await exec(
+      `cd ${folderPath} && docker compose up -d --force-recreate ${services.join(" ")}`,
+    );
+  }
+}
+
 export async function restart(
   path: string,
   files: string[],
@@ -81,7 +112,7 @@ export async function restart(
         await exec(`cd ${targetPath} && docker compose pull`);
         const download = performance.now();
 
-        await exec(`cd ${targetPath} && docker compose up -d --force-recreate`);
+        await recreate(targetPath, path + "/" + file);
         const restarted = performance.now();
 
         const downloadTime = download - start;

@@ -1,0 +1,9 @@
+# runs-on: emu
+
+services:
+  renovate:
+    container_name: renovate
+    image: renovate/renovate:41.92.1
+    restart: no
+    environment:
+      - TZ=Asia/Bangkok

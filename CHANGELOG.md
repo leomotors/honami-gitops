@@ -7,6 +7,7 @@ There is no versioning before 2.0.0 so the changelog is not here.
 ## [Unreleased - minor]
 
 - feat: live Discord status for compose restarts; continue unless two consecutive failures
+- feat: recreate cron / manual job services (no restart policy) without starting them
 - chore: bump dependencies
 
 ## [3.1.1] - 2026-04-05

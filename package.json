@@ -9,6 +9,7 @@
     "web:dev": "vite dev",
     "web:build": "vite build",
     "check": "tsc",
+    "test": "bun test src",
     "build": "bun run build.ts",
     "preview": "bun run --define APP_VERSION=\"'dev'\" src/index.ts",
     "web:check": "svelte-kit sync && svelte-check --tsconfig ./web/tsconfig.json"
