@@ -4,7 +4,7 @@ Version 1 is implemented without Docker. (Git Clone and systemctl service) which
 
 There is no versioning before 2.0.0 so the changelog is not here.
 
-## [Unreleased - minor]
+## [3.2.0] - 2026-09-25
 
 - feat: live Discord status for compose restarts; continue unless two consecutive failures
 - feat: recreate cron / manual job services (no restart policy) without starting them
